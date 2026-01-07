@@ -4,6 +4,7 @@ import ExpenseForm from '../components/forms/ExpenseForm';
 import ExpenseList from '../components/forms/ExpenseList';
 import { addExpense, createCategory, deleteExpense, listCategories, listExpenses } from '../api/expenses';
 import { getRange } from '../lib/dateRange';
+import { attachCategory } from '../lib/categoryMap';
 
 export default function Dashboard() {
   const [categories, setCategories] = useState([]);
@@ -22,7 +23,7 @@ export default function Dashboard() {
         listExpenses(range),
       ]);
       setCategories(categoriesData);
-      setExpenses(expenseData);
+      setExpenses(attachCategory(expenseData, categoriesData));
     } catch (err) {
       setError(err.message || 'Failed to load data.');
     } finally {
@@ -36,7 +37,7 @@ export default function Dashboard() {
 
   async function handleAddExpense(payload) {
     const created = await addExpense(payload);
-    setExpenses((prev) => [created, ...prev]);
+    setExpenses((prev) => [attachCategory([created], categories)[0], ...prev]);
     return created;
   }
 

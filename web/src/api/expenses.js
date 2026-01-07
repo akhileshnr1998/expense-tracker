@@ -57,7 +57,7 @@ export async function addExpense(payload) {
 export async function listExpenses({ from, to }) {
   const query = supabase
     .from('expenses')
-    .select('id, amount, currency, description, spent_at, created_at, category_id, categories:categories!expenses_category_id_fkey ( id, name, color )')
+    .select('id, amount, currency, description, spent_at, created_at, category_id')
     .order('spent_at', { ascending: false })
     .order('created_at', { ascending: false });
 

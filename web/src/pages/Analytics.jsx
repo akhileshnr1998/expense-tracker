@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import AppLayout from '../components/layout/AppLayout';
 import CategoryPie from '../components/charts/CategoryPie';
 import MonthlyBar from '../components/charts/MonthlyBar';
-import { listExpenses } from '../api/expenses';
+import { listCategories, listExpenses } from '../api/expenses';
 import { getCustomRange, getRange } from '../lib/dateRange';
+import { attachCategory } from '../lib/categoryMap';
 
 function groupByCategory(expenses) {
   const totals = new Map();
@@ -47,7 +48,11 @@ export default function Analytics() {
     async function loadAnalytics() {
       setLoading(true);
       try {
-        const data = await listExpenses(range);
+        const [expensesData, categoriesData] = await Promise.all([
+          listExpenses(range),
+          listCategories(),
+        ]);
+        const data = attachCategory(expensesData, categoriesData);
         if (isMounted) {
           setExpenses(data);
         }
