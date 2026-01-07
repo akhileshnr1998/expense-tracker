@@ -1,4 +1,4 @@
-# Expense Tracker (React + Supabase)
+# Coinfess (React + Supabase)
 
 Production-ready expense tracking app with auth, categorization, and analytics.
 

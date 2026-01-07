@@ -1,4 +1,4 @@
-# Expense Tracker (React + Supabase)
+# Coinfess (React + Supabase)
 
 Build a personal expense tracker with authentication, categorization, and analytics (daily/monthly/yearly). This README explains the full implementation: data model, API layer, UI flow, analytics queries, and folder structure.
 

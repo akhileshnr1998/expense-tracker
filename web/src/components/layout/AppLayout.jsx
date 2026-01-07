@@ -18,7 +18,7 @@ export default function AppLayout({ title, children }) {
     <div className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">Expense Tracker</p>
+          <p className="eyebrow">Coinfess</p>
           <h1>{title}</h1>
         </div>
         <div className="header-actions">
