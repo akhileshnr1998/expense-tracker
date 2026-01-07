@@ -21,7 +21,7 @@ export default function CategoryPie({ data }) {
             paddingAngle={2}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
+              <Cell key={`cell-${entry.name}`} fill={entry.color || COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Tooltip />

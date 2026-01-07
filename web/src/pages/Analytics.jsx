@@ -10,9 +10,18 @@ function groupByCategory(expenses) {
   const totals = new Map();
   expenses.forEach((expense) => {
     const name = expense.categories?.name || 'Uncategorized';
-    totals.set(name, (totals.get(name) || 0) + Number(expense.amount || 0));
+    const color = expense.categories?.color;
+    const current = totals.get(name) || { value: 0, color };
+    totals.set(name, {
+      value: current.value + Number(expense.amount || 0),
+      color: current.color || color,
+    });
   });
-  return Array.from(totals.entries()).map(([name, value]) => ({ name, value }));
+  return Array.from(totals.entries()).map(([name, payload]) => ({
+    name,
+    value: payload.value,
+    color: payload.color,
+  }));
 }
 
 function groupByMonth(expenses) {

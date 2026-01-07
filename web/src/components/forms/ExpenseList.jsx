@@ -14,6 +14,10 @@ export default function ExpenseList({ expenses, onDelete }) {
               <div>
                 <p className="expense-title">{expense.description || 'Untitled expense'}</p>
                 <p className="expense-meta">
+                  <span
+                    className="category-dot"
+                    style={{ backgroundColor: expense.categories?.color || '#c3b7a8' }}
+                  />
                   {expense.categories?.name || 'Uncategorized'} · {expense.spent_at}
                 </p>
               </div>
