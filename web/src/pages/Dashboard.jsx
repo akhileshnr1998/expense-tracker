@@ -9,11 +9,13 @@ export default function Dashboard() {
   const [categories, setCategories] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const range = useMemo(() => getRange('daily'), []);
 
   async function loadData() {
     setLoading(true);
+    setError('');
     try {
       const [categoriesData, expenseData] = await Promise.all([
         listCategories(),
@@ -21,6 +23,8 @@ export default function Dashboard() {
       ]);
       setCategories(categoriesData);
       setExpenses(expenseData);
+    } catch (err) {
+      setError(err.message || 'Failed to load data.');
     } finally {
       setLoading(false);
     }
@@ -31,13 +35,18 @@ export default function Dashboard() {
   }, []);
 
   async function handleAddExpense(payload) {
-    await addExpense(payload);
-    await loadData();
+    const created = await addExpense(payload);
+    setExpenses((prev) => [created, ...prev]);
+    return created;
   }
 
   async function handleCreateCategory(payload) {
-    await createCategory(payload);
-    await loadData();
+    const created = await createCategory(payload);
+    setCategories((prev) => {
+      const next = [created, ...prev];
+      return next.sort((a, b) => a.name.localeCompare(b.name));
+    });
+    return created;
   }
 
   async function handleDeleteExpense(id) {
@@ -62,6 +71,8 @@ export default function Dashboard() {
 
       {loading ? (
         <div className="page-center">Loading your dashboard...</div>
+      ) : error ? (
+        <div className="page-center">{error}</div>
       ) : (
         <section className="grid-2">
           <ExpenseForm

@@ -1,5 +1,16 @@
 import { supabase } from '../lib/supabaseClient';
 
+async function getUserId() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    throw error;
+  }
+  if (!data?.user?.id) {
+    throw new Error('Not authenticated. Please sign in again.');
+  }
+  return data.user.id;
+}
+
 export async function listCategories() {
   const { data, error } = await supabase
     .from('categories')
@@ -14,9 +25,10 @@ export async function listCategories() {
 }
 
 export async function createCategory({ name, color }) {
+  const user_id = await getUserId();
   const { data, error } = await supabase
     .from('categories')
-    .insert({ name, color })
+    .insert({ name, color, user_id })
     .select('id, name, color')
     .single();
 
@@ -28,9 +40,10 @@ export async function createCategory({ name, color }) {
 }
 
 export async function addExpense(payload) {
+  const user_id = await getUserId();
   const { data, error } = await supabase
     .from('expenses')
-    .insert(payload)
+    .insert({ ...payload, user_id })
     .select('id, amount, currency, description, spent_at, category_id')
     .single();
 
@@ -44,7 +57,7 @@ export async function addExpense(payload) {
 export async function listExpenses({ from, to }) {
   const query = supabase
     .from('expenses')
-    .select('id, amount, currency, description, spent_at, created_at, category_id, categories ( id, name, color )')
+    .select('id, amount, currency, description, spent_at, created_at, category_id, categories:categories!expenses_category_id_fkey ( id, name, color )')
     .order('spent_at', { ascending: false })
     .order('created_at', { ascending: false });
 

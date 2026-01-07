@@ -246,3 +246,6 @@ Recommended: Recharts
 ## Notes
 - Password hashing is handled by Supabase Auth. Do not store plaintext passwords.
 - Keep all reads/writes scoped by the authenticated user via RLS.
+- Surface API errors in the UI for expense/category actions to avoid silent failures.
+- If Supabase relationship joins fail, fetch categories separately and map by `category_id`.
+- Include `user_id` on inserts to satisfy RLS policies.

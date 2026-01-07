@@ -12,6 +12,9 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
   const [form, setForm] = useState(initialState);
   const [newCategory, setNewCategory] = useState({ name: '', color: '#3a6ea5' });
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [categoryError, setCategoryError] = useState('');
 
   const isValid = useMemo(() => {
     return Number(form.amount) > 0 && form.spent_at;
@@ -26,6 +29,7 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
     event.preventDefault();
     if (!isValid) return;
 
+    setFormError('');
     setLoading(true);
     try {
       await onAddExpense({
@@ -36,6 +40,8 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
         spent_at: form.spent_at,
       });
       setForm((prev) => ({ ...prev, amount: '', description: '' }));
+    } catch (error) {
+      setFormError(error.message || 'Failed to add expense.');
     } finally {
       setLoading(false);
     }
@@ -43,11 +49,22 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
 
   async function handleCreateCategory() {
     if (!newCategory.name.trim()) return;
-    await onCreateCategory({
-      name: newCategory.name.trim(),
-      color: newCategory.color,
-    });
-    setNewCategory({ name: '', color: newCategory.color });
+    setCategoryError('');
+    setCategoryLoading(true);
+    try {
+      const created = await onCreateCategory({
+        name: newCategory.name.trim(),
+        color: newCategory.color,
+      });
+      if (created?.id) {
+        setForm((prev) => ({ ...prev, category_id: created.id }));
+      }
+      setNewCategory({ name: '', color: newCategory.color });
+    } catch (error) {
+      setCategoryError(error.message || 'Failed to add category.');
+    } finally {
+      setCategoryLoading(false);
+    }
   }
 
   return (
@@ -115,6 +132,7 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
             {loading ? 'Saving...' : 'Add expense'}
           </button>
         </div>
+        {formError ? <p className="form-error full">{formError}</p> : null}
       </form>
 
       <div className="divider" />
@@ -125,6 +143,7 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
           <p>Add a quick label for your expenses.</p>
         </div>
         <div className="inline-controls">
+          <span className="color-preview" style={{ backgroundColor: newCategory.color }} />
           <input
             type="text"
             value={newCategory.name}
@@ -138,10 +157,11 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
             aria-label="Category color"
           />
           <button className="button ghost" type="button" onClick={handleCreateCategory}>
-            Add
+            {categoryLoading ? 'Adding...' : 'Add'}
           </button>
         </div>
       </div>
+      {categoryError ? <p className="form-error">{categoryError}</p> : null}
     </div>
   );
 }
