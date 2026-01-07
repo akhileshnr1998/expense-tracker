@@ -29,6 +29,9 @@ export default function AppLayout({ title, children }) {
         </div>
       </header>
       <nav className="app-nav">
+        <NavLink to="/add" className={({ isActive }) => isActive ? 'active' : undefined}>
+          Add
+        </NavLink>
         <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : undefined}>
           Dashboard
         </NavLink>
