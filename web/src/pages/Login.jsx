@@ -19,7 +19,7 @@ export default function Login() {
     setLoading(true);
     try {
       await signIn(form);
-      navigate('/dashboard');
+      navigate('/add');
     } catch (err) {
       setError(err.message);
     } finally {

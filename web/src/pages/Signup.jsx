@@ -41,7 +41,7 @@ export default function Signup() {
     setLoading(true);
     try {
       await signUp(form);
-      navigate('/dashboard');
+      navigate('/add');
     } catch (err) {
       setError(err.message);
     } finally {
