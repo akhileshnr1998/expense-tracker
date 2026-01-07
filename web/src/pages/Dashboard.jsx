@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import AppLayout from '../components/layout/AppLayout';
-import ExpenseForm from '../components/forms/ExpenseForm';
+import CategoryForm from '../components/forms/CategoryForm';
 import ExpenseList from '../components/forms/ExpenseList';
-import { addExpense, createCategory, deleteExpense, listCategories, listExpenses } from '../api/expenses';
+import { createCategory, deleteExpense, listCategories, listExpenses } from '../api/expenses';
 import { getRange } from '../lib/dateRange';
 import { attachCategory } from '../lib/categoryMap';
 
@@ -34,12 +34,6 @@ export default function Dashboard() {
   useEffect(() => {
     loadData();
   }, []);
-
-  async function handleAddExpense(payload) {
-    const created = await addExpense(payload);
-    setExpenses((prev) => [attachCategory([created], categories)[0], ...prev]);
-    return created;
-  }
 
   async function handleCreateCategory(payload) {
     const created = await createCategory(payload);
@@ -87,11 +81,7 @@ export default function Dashboard() {
         <div className="page-center">{error}</div>
       ) : (
         <section className="grid-2">
-          <ExpenseForm
-            categories={categories}
-            onAddExpense={handleAddExpense}
-            onCreateCategory={handleCreateCategory}
-          />
+          <CategoryForm onCreateCategory={handleCreateCategory} />
           <ExpenseList expenses={expenses} onDelete={handleDeleteExpense} />
         </section>
       )}

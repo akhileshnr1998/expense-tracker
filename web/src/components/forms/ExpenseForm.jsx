@@ -15,13 +15,10 @@ const initialState = {
   spent_at: getLocalDateString(),
 };
 
-export default function ExpenseForm({ categories, onAddExpense, onCreateCategory }) {
+export default function ExpenseForm({ categories, onAddExpense }) {
   const [form, setForm] = useState(initialState);
-  const [newCategory, setNewCategory] = useState({ name: '', color: '#3a6ea5' });
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState('');
-  const [categoryLoading, setCategoryLoading] = useState(false);
-  const [categoryError, setCategoryError] = useState('');
 
   const isValid = useMemo(() => {
     return Number(form.amount) > 0 && form.spent_at;
@@ -54,25 +51,6 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
     }
   }
 
-  async function handleCreateCategory() {
-    if (!newCategory.name.trim()) return;
-    setCategoryError('');
-    setCategoryLoading(true);
-    try {
-      const created = await onCreateCategory({
-        name: newCategory.name.trim(),
-        color: newCategory.color,
-      });
-      if (created?.id) {
-        setForm((prev) => ({ ...prev, category_id: created.id }));
-      }
-      setNewCategory({ name: '', color: newCategory.color });
-    } catch (error) {
-      setCategoryError(error.message || 'Failed to add category.');
-    } finally {
-      setCategoryLoading(false);
-    }
-  }
 
   return (
     <div className="card">
@@ -140,32 +118,6 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
         {formError ? <p className="form-error full">{formError}</p> : null}
       </form>
 
-      <div className="divider" />
-
-      <div className="inline-form">
-        <div>
-          <h3>Create category</h3>
-          <p>Add a quick label for your expenses.</p>
-        </div>
-        <div className="inline-controls">
-          <input
-            type="text"
-            value={newCategory.name}
-            onChange={(event) => setNewCategory({ ...newCategory, name: event.target.value })}
-            placeholder="e.g. Groceries"
-          />
-          <input
-            type="color"
-            value={newCategory.color}
-            onChange={(event) => setNewCategory({ ...newCategory, color: event.target.value })}
-            aria-label="Category color"
-          />
-          <button className="button ghost" type="button" onClick={handleCreateCategory}>
-            {categoryLoading ? 'Adding...' : 'Add'}
-          </button>
-        </div>
-      </div>
-      {categoryError ? <p className="form-error">{categoryError}</p> : null}
     </div>
   );
 }
