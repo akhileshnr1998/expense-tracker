@@ -5,6 +5,8 @@ import MonthlyBar from '../components/charts/MonthlyBar';
 import { listCategories, listExpenses } from '../api/expenses';
 import { getCustomRange, getRange } from '../lib/dateRange';
 import { attachCategory } from '../lib/categoryMap';
+import Select from '../components/forms/Select';
+import DatePicker from '../components/forms/DatePicker';
 
 function groupByCategory(expenses) {
   const totals = new Map();
@@ -96,23 +98,32 @@ export default function Analytics() {
           <p>Select a range to analyze spending.</p>
         </div>
         <div className="filter-controls">
-          <select value={rangeType} onChange={(event) => setRangeType(event.target.value)}>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-            <option value="custom">Custom</option>
-          </select>
+          <Select
+            label="Range"
+            value={rangeType}
+            onChange={setRangeType}
+            options={[
+              { value: 'daily', label: 'Daily' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' },
+              { value: 'custom', label: 'Custom' },
+            ]}
+          />
           {rangeType === 'custom' ? (
             <div className="custom-range">
-              <label>
-                From
-                <input type="date" value={customFrom} onChange={(event) => setCustomFrom(event.target.value)} />
-              </label>
-              <label>
-                To
-                <input type="date" value={customTo} onChange={(event) => setCustomTo(event.target.value)} />
-              </label>
+              <DatePicker
+                label="From"
+                value={customFrom}
+                onChange={setCustomFrom}
+                maxDate={customTo ? new Date(`${customTo}T00:00:00`) : undefined}
+              />
+              <DatePicker
+                label="To"
+                value={customTo}
+                onChange={setCustomTo}
+                minDate={customFrom ? new Date(`${customFrom}T00:00:00`) : undefined}
+              />
             </div>
           ) : null}
         </div>

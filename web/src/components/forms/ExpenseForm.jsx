@@ -1,11 +1,18 @@
 import { useMemo, useState } from 'react';
+import Select from './Select';
+import DatePicker from './DatePicker';
+
+function getLocalDateString(date = new Date()) {
+  const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 10);
+}
 
 const initialState = {
   amount: '',
   currency: 'INR',
   category_id: '',
   description: '',
-  spent_at: new Date().toISOString().slice(0, 10),
+  spent_at: getLocalDateString(),
 };
 
 export default function ExpenseForm({ categories, onAddExpense, onCreateCategory }) {
@@ -96,27 +103,25 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
             onChange={handleChange}
           />
         </label>
-        <label>
-          Category
-          <select name="category_id" value={form.category_id} onChange={handleChange}>
-            <option value="">Uncategorized</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Spent on
-          <input
-            type="date"
-            name="spent_at"
-            value={form.spent_at}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <Select
+          label="Category"
+          value={form.category_id}
+          onChange={(nextValue) => setForm((prev) => ({ ...prev, category_id: nextValue }))}
+          placeholder="Uncategorized"
+          options={[
+            { value: '', label: 'Uncategorized' },
+            ...categories.map((category) => ({
+              value: category.id,
+              label: category.name,
+              color: category.color,
+            })),
+          ]}
+        />
+        <DatePicker
+          label="Spent on"
+          value={form.spent_at}
+          onChange={(nextValue) => setForm((prev) => ({ ...prev, spent_at: nextValue }))}
+        />
         <label className="full">
           Description
           <input
