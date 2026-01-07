@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from './supabaseClient';
+import { supabase } from './superbaseClient';
 import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 
 function App() {
@@ -10,8 +10,13 @@ function App() {
   }, []);
 
   async function fetchExpenses() {
-    const { data } = await supabase.from('expenses').select('*');
-    setExpenses(data);
+    const { data, error } = await supabase.from('expenses').select('*');
+    if (error) {
+      console.error('Failed to fetch expenses:', error.message);
+      setExpenses([]);
+      return;
+    }
+    setExpenses(data ?? []);
   }
 
   // Simple analytics: Total by category
@@ -37,3 +42,5 @@ function App() {
     </div>
   );
 }
+
+export default App;
