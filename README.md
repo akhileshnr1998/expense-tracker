@@ -9,14 +9,18 @@ Production-ready expense tracking app with auth, categorization, and analytics.
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SITE_URL=https://coinfess.vercel.app
 ```
-4) Install dependencies and start the app:
+4) In Supabase, set Authentication → URL Configuration:
+   - Site URL: your Vercel URL
+   - Redirect URLs allow-list: `http://localhost:5174` and your Vercel URL
+5) Install dependencies and start the app:
 ```sh
 cd web
 npm install
 npm run dev
 ```
-5) Open the local URL from the terminal and sign up
+6) Open the local URL from the terminal and sign up
 
 ## Scripts
 - `npm run dev` start the dev server
