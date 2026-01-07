@@ -1,9 +1,11 @@
 import { supabase } from '../lib/supabaseClient';
 
 export async function signUp({ email, password, username }) {
+  const redirectTo = import.meta.env.VITE_SITE_URL;
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: redirectTo ? { emailRedirectTo: redirectTo } : undefined,
   });
 
   if (error) {

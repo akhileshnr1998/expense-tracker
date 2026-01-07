@@ -20,6 +20,7 @@ Build a personal expense tracker with authentication, categorization, and analyt
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SITE_URL=your_site_url
 ```
 3) Install and run
 ```sh
@@ -93,6 +94,8 @@ Supabase Auth already hashes passwords and stores them securely.
 - Sign up: email + password (optional username stored in a profile table)
 - Login: email + password
 - Session persisted via Supabase client
+- Configure Supabase Auth URL allow-list with both local and production URLs
+- Use `VITE_SITE_URL` to control email verification redirect targets
 
 Strong password validation (client-side before sign up):
 - Minimum 8 characters
