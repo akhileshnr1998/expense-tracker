@@ -148,7 +148,6 @@ export default function ExpenseForm({ categories, onAddExpense, onCreateCategory
           <p>Add a quick label for your expenses.</p>
         </div>
         <div className="inline-controls">
-          <span className="color-preview" style={{ backgroundColor: newCategory.color }} />
           <input
             type="text"
             value={newCategory.name}

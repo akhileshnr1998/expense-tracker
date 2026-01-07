@@ -512,14 +512,25 @@ select {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.color-preview {
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+
+.inline-controls input[type='text'],
+.inline-controls input[type='color'],
+.inline-controls .button {
+  height: 44px;
+}
+
+.inline-controls input[type='color'] {
+  padding: 4px;
+  width: 44px;
+}
+
+.inline-controls .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .divider {
